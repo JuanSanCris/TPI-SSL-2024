@@ -48,11 +48,20 @@ t_APERT_BLOQUE = r'[{]'
 t_CIERRE_BLOQUE = r'[}]'
 t_NUMERO = r'[\d]+'
 t_BOOLEANO = r'(true|false)'
-t_FECHA = r'["](19[0-9][0-9]|20[0-9][0-9])-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])["]'
-#t_fecha_Invalida = r'[:][ ]*["](\d{4})-(\d{2})-(\d{2})["]'
+#t_FECHA = r'["](19[0-9][0-9]|20[0-9][0-9])-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])["]'
 
 
-
+def t_FECHA(t):
+    r'["](\d{4})-(\d{2})-(\d{2})["]' #"1899-12-26"
+    year = int(t.value[1:5])  # Extrae y convierte el año a un entero
+    month = int(t.value[6:8])
+    day = int(t.value[9:11])
+    if not ((1900 <= year <= 2099) and (1 <= month <= 12) and (1 <= day <= 31)):
+        print('Error en fecha')
+    else:
+        return t    
+    
+        
 #Tokens de salto de linea o especiales que ignoran o muestran error
 def t_ignore_tab(t):
     r'\t'
@@ -74,17 +83,15 @@ def t_TEXTO(t): #"fecha_contratacion"
         t.type = t.value.upper().strip('"')
     return t
 
-         
-
 
 lexer = lex.lex()
 
 
 #data = '"empresas": [ {\n"nombre_empresa": "MC Donals", "fundacion": 2025, "direccion": { "calle": "Calle Falsa 123", "ciudad": "Springfield", "pais": "USA"},}'
 
-#data = '"empresas": [{\n"nombre": "string",\n"version": "integer", "fecha_contratacion": "1999-12-31" }]'
+data = '"empresas" :  [{\n"nombre": "string",\n"version": "integer", "fecha_contratacion": "1999-12-31" }]'
 
-data = '"fecha_contratacion": "2001-12-45"'
+#data = '"fecha_contratacion": "2001-04-30"'
 
 
 #data = '"empresas": ['
